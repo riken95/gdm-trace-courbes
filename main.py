@@ -38,117 +38,24 @@ def lire_csv(chemin:str):
     essaie = essaie.drop(essaie.index[0])
     essaie.columns = cols
     essaie = treat_csv(essaie)
-    plt.plot(essaie['Def'],essaie['Con'])
+    #plt.plot(essaie['Def'],essaie['Con'])
+    return essaie
 
 
-
-for nom_fichier in os.listdir(repertoire):
-    chemin_complet = os.path.join(repertoire,nom_fichier)
-
-    if os.path.isfile(chemin_complet):
-        lire_csv(chemin_complet)
+plt.title("moyennes totales")
+for nom_dossier in os.listdir(repertoire):
+    chemin_complet = os.path.join(repertoire,nom_dossier)
     
-"""
-
-plt.subplot(1,3,1)
-
-# plt.plot(pla_exl_1['Def'],pla_exl_1['Con'],label='ExL 1',color='tab:blue')
-# plt.plot(pla_exl_2['Def'],pla_exl_2['Con'],label='ExL 2',color='tab:blue')
-# plt.plot(pla_exl_3['Def'],pla_exl_3['Con'],label='ExL 3',color='tab:blue')
-x, avg = average_curve([pla_exl_1,pla_exl_2,pla_exl_3])
-plt.plot(x,avg,label='ExL Avg',color='tab:blue')
-
-# plt.plot(pla_loxl_1['Def'],pla_loxl_1['Con'],'--',label='LoxL 1',color='tab:red')
-# plt.plot(pla_loxl_2['Def'],pla_loxl_2['Con'],'--',label='LoxL 2',color='tab:red')
-# plt.plot(pla_loxl_3['Def'],pla_loxl_3['Con'],'--',label='LoxL 3',color='tab:red')
-x, avg = average_curve([pla_loxl_1,pla_loxl_2,pla_loxl_3])
-plt.plot(x,avg,label='LoxL Avg',color='tab:red')
-
-plt.plot(pla_lxe_1['Def'],pla_lxe_1['Con'],'--',label='LoxE 1',color='tab:green')
-# plt.plot(pla_lxe_2['Def'],pla_lxe_2['Con'],'--',label='LxE 2',color='tab:green')
-# plt.plot(pla_lxe_3['Def'],pla_lxe_3['Con'],'--',label='LxE 3',color='tab:green')
-x, avg = average_curve([pla_lxe_2,pla_lxe_3])
-plt.plot(x,avg,label='LoxE Avg',color='tab:green')
-
-plt.xlabel('Deformation')
-plt.ylabel('Contrainte')
-plt.ylim([0,65])
-plt.xlim([0,8])
+    dfs = []
+    if os.path.isdir(chemin_complet):
+        for fichier in os.listdir(chemin_complet):
+            chemin_complet_tot = os.path.join(chemin_complet,fichier)
+            
+            if os.path.isfile(chemin_complet_tot):
+                dfs.append(lire_csv(chemin_complet_tot))
+    x,y = average_curve(dfs)
+    plt.plot(x,y,label=nom_dossier)
 plt.legend()
-plt.title('PLA Pigmenté')
-
-plt.subplot(1,3,2)
-
-poudre_1 = pd.read_csv('poudre_1.csv')
-poudre_1 = treat_csv(poudre_1)
-
-poudre_2 = pd.read_csv('poudre_2.csv')
-poudre_2 = treat_csv(poudre_2)
-
-poudre_1l = pd.read_csv('poudre_1l.csv')
-poudre_1l = treat_csv(poudre_1l)
-
-poudre_2l = pd.read_csv('poudre_2l.csv')
-poudre_2l = treat_csv(poudre_2l)
-
-# plt.plot(poudre_1['Def'],poudre_1['Con'],'--',label='Poudre 1',color='tab:blue')
-# plt.plot(poudre_2['Def'],poudre_2['Con'],'--',label='Poudre 2',color='tab:blue')
-
-x, avg = average_curve([poudre_1,poudre_2])
-
-plt.plot(x,avg,label='Moyenne',color='tab:blue')
-plt.legend()
-plt.title('Poudre')
-plt.xlabel('Deformation')
-plt.ylabel('Contrainte')
-plt.ylim([0,65])
-
-resine_45_1 = pd.read_csv('resine_45_1.csv')
-resine_45_1 = treat_csv(resine_45_1)
-
-resine_45_2 = pd.read_csv('resine_45_2.csv')
-resine_45_2 = treat_csv(resine_45_2)
-
-resine_exl_2 = pd.read_csv('resine_exl_2.csv')
-resine_exl_2 = treat_csv(resine_exl_2)
-
-resine_exlo_1 = pd.read_csv('resine_exlo_1.csv')
-resine_exlo_1 = treat_csv(resine_exlo_1)
-
-resine_exlo_2 = pd.read_csv('resine_exlo_2.csv')
-resine_exlo_2 = treat_csv(resine_exlo_2)
-
-resine_lxlo_1 = pd.read_csv('resine_lxlo_1.csv')
-resine_lxlo_1 = treat_csv(resine_lxlo_1)
-
-resine_lxlo_2 = pd.read_csv('resine_lxlo_2.csv')
-resine_lxlo_2 = treat_csv(resine_lxlo_2)
-
-plt.subplot(1,3,3)
-
-# plt.plot(resine_45_1['Def'],resine_45_1['Con'],label='Resine 45 1',color='tab:blue')
-# plt.plot(resine_45_2['Def'],resine_45_2['Con'],label='Resine 45 2',color='tab:blue')
-x, avg = average_curve([resine_45_1,resine_45_2])
-plt.plot(x,avg,label='45 Avg',color='tab:blue')
-
-plt.plot(resine_exl_2['Def'],resine_exl_2['Con'],label='Resine ExL 2',color='tab:red')
-
-# plt.plot(resine_exlo_1['Def'],resine_exlo_1['Con'],label='Resine ExLo 1',color='gold')
-# plt.plot(resine_exlo_2['Def'],resine_exlo_2['Con'],label='Resine ExLo 2',color='gold')
-x, avg = average_curve([resine_exlo_1,resine_exlo_2])
-plt.plot(x,avg,label='ExLo Avg',color='gold')
-
-# plt.plot(resine_lxlo_1['Def'],resine_lxlo_1['Con'],label='Resine LxLo 1',color='tab:green')
-# plt.plot(resine_lxlo_2['Def'],resine_lxlo_2['Con'],label='Resine LxLo 2',color='tab:green')
-x, avg = average_curve([resine_lxlo_1,resine_lxlo_2])
-plt.plot(x,avg,label='LxLo Avg',color='tab:green')
-
-plt.xlabel('Deformation')
-plt.ylabel('Contrainte')
-plt.ylim([0,65])
-plt.legend()
-plt.title('Resine')
-
-plt.tight_layout()
-"""
+plt.xlabel('Déformation en %')
+plt.ylabel('Contrainte (MPa)')
 plt.show()
